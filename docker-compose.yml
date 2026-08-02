@@ -1,0 +1,30 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=swipe-violate-backroom.ngrok-free.dev
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://swipe-violate-backroom.ngrok-free.dev/
+      - GENERIC_TIMEZONE=America/Argentina/Buenos_Aires
+      - N8N_ENCRYPTION_KEY= #Busca la clave en el archivo .env
+      - N8N_SECURE_COOKIE=false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - n8n_network
+
+volumes:
+  n8n_data:
+    driver: local
+
+networks:
+  n8n_network:
+    driver: bridge

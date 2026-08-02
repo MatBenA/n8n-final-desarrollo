@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agente · Consola</title>
+<style>
+  :root{
+    --bg: #0d1210;
+    --panel: #131a17;
+    --panel-2: #182019;
+    --line: #24322b;
+    --text: #e7ede9;
+    --dim: #7f9186;
+    --accent: #5ee6a8;
+    --accent-dim: #2a5c46;
+    --user-bubble: #1c2921;
+    --bot-bubble: #182019;
+    --error: #e6725e;
+    --mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(94,230,168,0.06), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family: var(--mono);
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    overflow:hidden;
+  }
+
+  /* header */
+  header{
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-shrink:0;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .dot{
+    width:9px; height:9px; border-radius:50%;
+    background: var(--dim);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.03);
+    transition: background .2s, box-shadow .2s;
+  }
+  .dot.online{ background: var(--accent); box-shadow: 0 0 10px rgba(94,230,168,0.6), 0 0 0 3px rgba(94,230,168,0.12); }
+  .dot.busy{ background:#e6c15e; box-shadow: 0 0 10px rgba(230,193,94,0.6), 0 0 0 3px rgba(230,193,94,0.12); }
+  .dot.error{ background: var(--error); box-shadow: 0 0 10px rgba(230,114,94,0.6), 0 0 0 3px rgba(230,114,94,0.12); }
+  h1{ font-size:13px; font-weight:600; letter-spacing:0.02em; margin:0; text-transform:uppercase; color:var(--text); }
+  .sub{ font-size:11px; color:var(--dim); margin-top:1px; }
+
+  button.icon-btn{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--dim);
+    font-family:var(--mono);
+    font-size:11px;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    transition: all .15s;
+    letter-spacing:0.02em;
+  }
+  button.icon-btn:hover{ border-color:var(--accent-dim); color:var(--text); }
+
+  /* settings panel */
+  #settings{
+    border-bottom:1px solid var(--line);
+    background:var(--panel);
+    padding:0 18px;
+    max-height:0;
+    overflow:hidden;
+    transition: max-height .25s ease, padding .25s ease;
+    flex-shrink:0;
+  }
+  #settings.open{ max-height:340px; padding:16px 18px; }
+  .field{ margin-bottom:10px; }
+  .field label{
+    display:block; font-size:10px; color:var(--dim); text-transform:uppercase;
+    letter-spacing:0.06em; margin-bottom:5px;
+  }
+  .field input{
+    width:100%;
+    background:var(--bg);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-family:var(--mono);
+    font-size:12.5px;
+    padding:8px 10px;
+    border-radius:6px;
+    outline:none;
+  }
+  .field input:focus{ border-color:var(--accent-dim); }
+  .field-row{ display:flex; gap:10px; }
+  .field-row .field{ flex:1; }
+  .settings-note{ font-size:11px; color:var(--dim); line-height:1.5; margin:10px 0 4px; }
+  .settings-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:4px; }
+  .btn-primary{
+    background:var(--accent);
+    color:#08130e;
+    border:none;
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:0.03em;
+    padding:8px 14px;
+    border-radius:6px;
+    cursor:pointer;
+    text-transform:uppercase;
+  }
+  .btn-primary:hover{ filter:brightness(1.08); }
+
+  /* messages */
+  #messages{
+    flex:1;
+    overflow-y:auto;
+    padding:22px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  #messages::-webkit-scrollbar{ width:8px; }
+  #messages::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
+
+  .row{ display:flex; }
+  .row.user{ justify-content:flex-end; }
+  .row.bot{ justify-content:flex-start; }
+
+  .bubble{
+    max-width:72%;
+    padding:10px 13px;
+    border-radius:10px;
+    font-size:13.5px;
+    line-height:1.55;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .row.user .bubble{
+    background:var(--user-bubble);
+    border:1px solid var(--accent-dim);
+    border-bottom-right-radius:2px;
+  }
+  .row.bot .bubble{
+    background:var(--bot-bubble);
+    border:1px solid var(--line);
+    border-bottom-left-radius:2px;
+  }
+  .row.bot .bubble.error{ border-color:var(--error); color:#f3d3cb; }
+  .tag{
+    font-size:9.5px; color:var(--dim); text-transform:uppercase; letter-spacing:0.06em;
+    margin-bottom:4px; display:block;
+  }
+
+  .empty-state{
+    margin:auto;
+    text-align:center;
+    color:var(--dim);
+    max-width:360px;
+  }
+  .empty-state .glyph{ font-size:28px; margin-bottom:10px; opacity:0.7; }
+  .empty-state .big{ color:var(--text); font-size:13px; margin-bottom:6px; }
+  .empty-state .small{ font-size:11.5px; line-height:1.6; }
+
+  .typing{ display:flex; gap:4px; padding:4px 0; }
+  .typing span{
+    width:6px; height:6px; border-radius:50%; background:var(--dim);
+    animation: blink 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2){ animation-delay:.2s; }
+  .typing span:nth-child(3){ animation-delay:.4s; }
+  @keyframes blink{ 0%,80%,100%{ opacity:0.25; } 40%{ opacity:1; } }
+
+  /* input bar */
+  #inputbar{
+    border-top:1px solid var(--line);
+    background:var(--panel);
+    padding:12px 18px;
+    display:flex;
+    gap:10px;
+    align-items:flex-end;
+    flex-shrink:0;
+  }
+  #msginput{
+    flex:1;
+    background:var(--bg);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-family:var(--mono);
+    font-size:13.5px;
+    padding:11px 13px;
+    border-radius:8px;
+    outline:none;
+    resize:none;
+    max-height:120px;
+    line-height:1.4;
+  }
+  #msginput:focus{ border-color:var(--accent-dim); }
+  #send{
+    background:var(--accent);
+    color:#08130e;
+    border:none;
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:12px;
+    padding:11px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    flex-shrink:0;
+  }
+  #send:disabled{ background:var(--panel-2); color:var(--dim); cursor:not-allowed; }
+  #send:not(:disabled):hover{ filter:brightness(1.08); }
+
+  .session-note{ font-size:10px; color:var(--dim); padding:0 18px 8px; flex-shrink:0; }
+  .session-note code{ color:var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="dot" id="statusDot"></span>
+    <div>
+      <h1>Consola del agente</h1>
+      <div class="sub" id="statusText">Sin configurar</div>
+    </div>
+  </div>
+  <button class="icon-btn" id="toggleSettings">Configuración</button>
+</header>
+
+<div id="settings">
+  <div class="field">
+    <label>URL del webhook (n8n)</label>
+    <input type="text" id="webhookUrl" placeholder="https://tu-instancia.app.n8n.cloud/webhook/xxxx" />
+  </div>
+  <div class="field-row">
+    <div class="field">
+      <label>Campo del mensaje enviado</label>
+      <input type="text" id="fieldMessage" value="chatInput" />
+    </div>
+    <div class="field">
+      <label>Campo del session id</label>
+      <input type="text" id="fieldSession" value="sessionId" />
+    </div>
+  </div>
+  <div class="field">
+    <label>Campo de la respuesta (en el JSON que devuelve n8n)</label>
+    <input type="text" id="fieldResponse" value="output" />
+  </div>
+  <div class="settings-note">
+    El session id se genera solo y se manda en cada mensaje para que tu agente mantenga memoria de la conversación (si tu workflow usa memoria por sessionId). Si tu webhook espera otros nombres de campo, ajustalos acá. Si la respuesta no viene en JSON con ese campo, se muestra el texto crudo igual.
+  </div>
+  <div class="settings-actions">
+    <button class="btn-primary" id="testConn">Probar conexión</button>
+  </div>
+</div>
+
+<div class="session-note" id="sessionNote"></div>
+
+<div id="messages">
+  <div class="empty-state" id="emptyState">
+    <div class="glyph">◆</div>
+    <div class="big">Todavía no configuraste el webhook</div>
+    <div class="small">Abrí "Configuración" arriba a la derecha, pegá la URL de tu webhook de n8n y probá la conexión. Después ya podés escribir acá abajo.</div>
+  </div>
+</div>
+
+<div id="inputbar">
+  <textarea id="msginput" rows="1" placeholder="Escribí un mensaje…" disabled></textarea>
+  <button id="send" disabled>Enviar</button>
+</div>
+
+<script>
+(function(){
+  const settingsPanel = document.getElementById('settings');
+  const toggleBtn = document.getElementById('toggleSettings');
+  const webhookInput = document.getElementById('webhookUrl');
+  const fieldMessage = document.getElementById('fieldMessage');
+  const fieldSession = document.getElementById('fieldSession');
+  const fieldResponse = document.getElementById('fieldResponse');
+  const testBtn = document.getElementById('testConn');
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  const messages = document.getElementById('messages');
+  const emptyState = document.getElementById('emptyState');
+  const msgInput = document.getElementById('msginput');
+  const sendBtn = document.getElementById('send');
+  const sessionNote = document.getElementById('sessionNote');
+
+  let configured = false;
+  const sessionId = 'web-' + Math.random().toString(36).slice(2, 10);
+  sessionNote.innerHTML = 'Sesión: <code>' + sessionId + '</code>';
+
+  toggleBtn.addEventListener('click', () => {
+    settingsPanel.classList.toggle('open');
+  });
+  // start open since nothing is configured yet
+  settingsPanel.classList.add('open');
+
+  function setStatus(state, text){
+    statusDot.className = 'dot ' + state;
+    statusText.textContent = text;
+  }
+
+  function autoresize(){
+    msgInput.style.height = 'auto';
+    msgInput.style.height = Math.min(msgInput.scrollHeight, 120) + 'px';
+  }
+  msgInput.addEventListener('input', autoresize);
+
+  function enableChat(on){
+    configured = on;
+    msgInput.disabled = !on;
+    sendBtn.disabled = !on;
+    if(on) emptyState.style.display = 'none';
+  }
+
+  function addBubble(role, text, isError){
+    if(emptyState.parentElement) emptyState.style.display = 'none';
+    const row = document.createElement('div');
+    row.className = 'row ' + (role === 'user' ? 'user' : 'bot');
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble' + (isError ? ' error' : '');
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = role === 'user' ? 'vos' : (isError ? 'error' : 'agente');
+    bubble.appendChild(tag);
+    const body = document.createElement('div');
+    body.textContent = text;
+    bubble.appendChild(body);
+    row.appendChild(bubble);
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+    return bubble;
+  }
+
+  function addTyping(){
+    const row = document.createElement('div');
+    row.className = 'row bot';
+    row.id = 'typingRow';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = '<span class="tag">agente</span><div class="typing"><span></span><span></span><span></span></div>';
+    row.appendChild(bubble);
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+  }
+  function removeTyping(){
+    const row = document.getElementById('typingRow');
+    if(row) row.remove();
+  }
+
+  function extractResponseText(data, fieldName){
+    // data can be an object, an array of objects, or plain text already
+    if (typeof data === 'string') return data;
+    let obj = data;
+    if (Array.isArray(data)) obj = data[0];
+    if (obj && typeof obj === 'object'){
+      if (fieldName && obj[fieldName] !== undefined) return String(obj[fieldName]);
+      // common fallbacks
+      for (const key of ['output','response','text','answer','message','reply']){
+        if (obj[key] !== undefined) return String(obj[key]);
+      }
+      return JSON.stringify(obj, null, 2);
+    }
+    return String(data);
+  }
+
+  async function callWebhook(userText){
+    const url = webhookInput.value.trim();
+    const body = {};
+    body[fieldMessage.value.trim() || 'chatInput'] = userText;
+    body[fieldSession.value.trim() || 'sessionId'] = sessionId;
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok){
+      throw new Error('El webhook respondió con estado ' + res.status);
+    }
+
+    const rawText = await res.text();
+    if (!rawText || !rawText.trim()){
+      throw new Error('El webhook respondió con el body vacío. Revisá en n8n que el nodo "Respond to Webhook" esté conectado después del AI Agent y que la ejecución haya terminado sin error.');
+    }
+
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (e){
+      data = rawText; // not JSON, treat as plain text
+    }
+    return extractResponseText(data, fieldResponse.value.trim());
+  }
+
+  testBtn.addEventListener('click', async () => {
+    const url = webhookInput.value.trim();
+    if (!url){
+      setStatus('error', 'Falta la URL del webhook');
+      return;
+    }
+    setStatus('busy', 'Probando conexión…');
+    testBtn.disabled = true;
+    try {
+      const reply = await callWebhook('ping de prueba desde la consola web');
+      setStatus('online', 'Conectado');
+      enableChat(true);
+      settingsPanel.classList.remove('open');
+      addBubble('bot', reply, false);
+    } catch (err){
+      setStatus('error', 'No se pudo conectar');
+      addBubble('bot', 'No se pudo conectar con el webhook: ' + err.message, true);
+    } finally {
+      testBtn.disabled = false;
+    }
+  });
+
+  async function sendMessage(){
+    const text = msgInput.value.trim();
+    if (!text || !configured) return;
+    addBubble('user', text, false);
+    msgInput.value = '';
+    autoresize();
+    sendBtn.disabled = true;
+    msgInput.disabled = true;
+    setStatus('busy', 'Esperando respuesta…');
+    addTyping();
+    try {
+      const reply = await callWebhook(text);
+      removeTyping();
+      addBubble('bot', reply, false);
+      setStatus('online', 'Conectado');
+    } catch (err){
+      removeTyping();
+      addBubble('bot', 'Error al contactar al agente: ' + err.message, true);
+      setStatus('error', 'Error de conexión');
+    } finally {
+      sendBtn.disabled = false;
+      msgInput.disabled = false;
+      msgInput.focus();
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  msgInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  setStatus('', 'Sin configurar');
+})();
+</script>
+
+</body>
+</html>
