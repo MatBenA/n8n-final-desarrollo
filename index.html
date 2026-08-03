@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>Agente · Consola</title>
 <style>
   :root{
@@ -30,7 +30,7 @@
     font-family: var(--mono);
     display:flex;
     flex-direction:column;
-    height:100vh;
+    height:100dvh;
     overflow:hidden;
   }
 
@@ -40,16 +40,15 @@
     border-bottom:1px solid var(--line);
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    gap:12px;
+    gap:10px;
     flex-shrink:0;
   }
-  .brand{ display:flex; align-items:center; gap:10px; }
   .dot{
     width:9px; height:9px; border-radius:50%;
     background: var(--dim);
     box-shadow: 0 0 0 3px rgba(255,255,255,0.03);
     transition: background .2s, box-shadow .2s;
+    flex-shrink:0;
   }
   .dot.online{ background: var(--accent); box-shadow: 0 0 10px rgba(94,230,168,0.6), 0 0 0 3px rgba(94,230,168,0.12); }
   .dot.busy{ background:#e6c15e; box-shadow: 0 0 10px rgba(230,193,94,0.6), 0 0 0 3px rgba(230,193,94,0.12); }
@@ -57,71 +56,11 @@
   h1{ font-size:13px; font-weight:600; letter-spacing:0.02em; margin:0; text-transform:uppercase; color:var(--text); }
   .sub{ font-size:11px; color:var(--dim); margin-top:1px; }
 
-  button.icon-btn{
-    background:transparent;
-    border:1px solid var(--line);
-    color:var(--dim);
-    font-family:var(--mono);
-    font-size:11px;
-    padding:6px 10px;
-    border-radius:6px;
-    cursor:pointer;
-    transition: all .15s;
-    letter-spacing:0.02em;
-  }
-  button.icon-btn:hover{ border-color:var(--accent-dim); color:var(--text); }
-
-  /* settings panel */
-  #settings{
-    border-bottom:1px solid var(--line);
-    background:var(--panel);
-    padding:0 18px;
-    max-height:0;
-    overflow:hidden;
-    transition: max-height .25s ease, padding .25s ease;
-    flex-shrink:0;
-  }
-  #settings.open{ max-height:340px; padding:16px 18px; }
-  .field{ margin-bottom:10px; }
-  .field label{
-    display:block; font-size:10px; color:var(--dim); text-transform:uppercase;
-    letter-spacing:0.06em; margin-bottom:5px;
-  }
-  .field input{
-    width:100%;
-    background:var(--bg);
-    border:1px solid var(--line);
-    color:var(--text);
-    font-family:var(--mono);
-    font-size:12.5px;
-    padding:8px 10px;
-    border-radius:6px;
-    outline:none;
-  }
-  .field input:focus{ border-color:var(--accent-dim); }
-  .field-row{ display:flex; gap:10px; }
-  .field-row .field{ flex:1; }
-  .settings-note{ font-size:11px; color:var(--dim); line-height:1.5; margin:10px 0 4px; }
-  .settings-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:4px; }
-  .btn-primary{
-    background:var(--accent);
-    color:#08130e;
-    border:none;
-    font-family:var(--mono);
-    font-weight:700;
-    font-size:11px;
-    letter-spacing:0.03em;
-    padding:8px 14px;
-    border-radius:6px;
-    cursor:pointer;
-    text-transform:uppercase;
-  }
-  .btn-primary:hover{ filter:brightness(1.08); }
-
   /* messages */
   #messages{
     flex:1;
     overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
     padding:22px 18px;
     display:flex;
     flex-direction:column;
@@ -182,7 +121,7 @@
   #inputbar{
     border-top:1px solid var(--line);
     background:var(--panel);
-    padding:12px 18px;
+    padding:12px 18px calc(12px + env(safe-area-inset-bottom));
     display:flex;
     gap:10px;
     align-items:flex-end;
@@ -194,7 +133,7 @@
     border:1px solid var(--line);
     color:var(--text);
     font-family:var(--mono);
-    font-size:13.5px;
+    font-size:16px; /* 16px avoids iOS Safari auto-zoom on focus */
     padding:11px 13px;
     border-radius:8px;
     outline:none;
@@ -219,58 +158,23 @@
   }
   #send:disabled{ background:var(--panel-2); color:var(--dim); cursor:not-allowed; }
   #send:not(:disabled):hover{ filter:brightness(1.08); }
-
-  .session-note{ font-size:10px; color:var(--dim); padding:0 18px 8px; flex-shrink:0; }
-  .session-note code{ color:var(--accent); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand">
-    <span class="dot" id="statusDot"></span>
-    <div>
-      <h1>Consola del agente</h1>
-      <div class="sub" id="statusText">Sin configurar</div>
-    </div>
+  <span class="dot" id="statusDot"></span>
+  <div>
+    <h1>Consola del agente</h1>
+    <div class="sub" id="statusText">Conectando…</div>
   </div>
-  <button class="icon-btn" id="toggleSettings">Configuración</button>
 </header>
-
-<div id="settings">
-  <div class="field">
-    <label>URL del webhook (n8n)</label>
-    <input type="text" id="webhookUrl" placeholder="https://tu-instancia.app.n8n.cloud/webhook/xxxx" />
-  </div>
-  <div class="field-row">
-    <div class="field">
-      <label>Campo del mensaje enviado</label>
-      <input type="text" id="fieldMessage" value="chatInput" />
-    </div>
-    <div class="field">
-      <label>Campo del session id</label>
-      <input type="text" id="fieldSession" value="sessionId" />
-    </div>
-  </div>
-  <div class="field">
-    <label>Campo de la respuesta (en el JSON que devuelve n8n)</label>
-    <input type="text" id="fieldResponse" value="output" />
-  </div>
-  <div class="settings-note">
-    El session id se genera solo y se manda en cada mensaje para que tu agente mantenga memoria de la conversación (si tu workflow usa memoria por sessionId). Si tu webhook espera otros nombres de campo, ajustalos acá. Si la respuesta no viene en JSON con ese campo, se muestra el texto crudo igual.
-  </div>
-  <div class="settings-actions">
-    <button class="btn-primary" id="testConn">Probar conexión</button>
-  </div>
-</div>
-
-<div class="session-note" id="sessionNote"></div>
 
 <div id="messages">
   <div class="empty-state" id="emptyState">
     <div class="glyph">◆</div>
-    <div class="big">Todavía no configuraste el webhook</div>
-    <div class="small">Abrí "Configuración" arriba a la derecha, pegá la URL de tu webhook de n8n y probá la conexión. Después ya podés escribir acá abajo.</div>
+    <div class="big">Conectando con el agente…</div>
+    <div class="small">En un momento vas a poder escribirle.</div>
   </div>
 </div>
 
@@ -281,30 +185,20 @@
 
 <script>
 (function(){
-  const settingsPanel = document.getElementById('settings');
-  const toggleBtn = document.getElementById('toggleSettings');
-  const webhookInput = document.getElementById('webhookUrl');
-  const fieldMessage = document.getElementById('fieldMessage');
-  const fieldSession = document.getElementById('fieldSession');
-  const fieldResponse = document.getElementById('fieldResponse');
-  const testBtn = document.getElementById('testConn');
+  // --- Configuración fija del agente ---
+  const WEBHOOK_URL = 'https://swipe-violate-backroom.ngrok-free.dev/webhook/1628e349-dbce-487f-9425-913b178f45d6';
+  const FIELD_MESSAGE = 'chatInput';
+  const FIELD_SESSION = 'sessionId';
+  const FIELD_RESPONSE = 'output';
+
   const statusDot = document.getElementById('statusDot');
   const statusText = document.getElementById('statusText');
   const messages = document.getElementById('messages');
   const emptyState = document.getElementById('emptyState');
   const msgInput = document.getElementById('msginput');
   const sendBtn = document.getElementById('send');
-  const sessionNote = document.getElementById('sessionNote');
 
-  let configured = false;
   const sessionId = 'web-' + Math.random().toString(36).slice(2, 10);
-  sessionNote.innerHTML = 'Sesión: <code>' + sessionId + '</code>';
-
-  toggleBtn.addEventListener('click', () => {
-    settingsPanel.classList.toggle('open');
-  });
-  // start open since nothing is configured yet
-  settingsPanel.classList.add('open');
 
   function setStatus(state, text){
     statusDot.className = 'dot ' + state;
@@ -318,10 +212,8 @@
   msgInput.addEventListener('input', autoresize);
 
   function enableChat(on){
-    configured = on;
     msgInput.disabled = !on;
     sendBtn.disabled = !on;
-    if(on) emptyState.style.display = 'none';
   }
 
   function addBubble(role, text, isError){
@@ -360,13 +252,11 @@
   }
 
   function extractResponseText(data, fieldName){
-    // data can be an object, an array of objects, or plain text already
     if (typeof data === 'string') return data;
     let obj = data;
     if (Array.isArray(data)) obj = data[0];
     if (obj && typeof obj === 'object'){
       if (fieldName && obj[fieldName] !== undefined) return String(obj[fieldName]);
-      // common fallbacks
       for (const key of ['output','response','text','answer','message','reply']){
         if (obj[key] !== undefined) return String(obj[key]);
       }
@@ -376,12 +266,11 @@
   }
 
   async function callWebhook(userText){
-    const url = webhookInput.value.trim();
     const body = {};
-    body[fieldMessage.value.trim() || 'chatInput'] = userText;
-    body[fieldSession.value.trim() || 'sessionId'] = sessionId;
+    body[FIELD_MESSAGE] = userText;
+    body[FIELD_SESSION] = sessionId;
 
-    const res = await fetch(url, {
+    const res = await fetch(WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -396,48 +285,25 @@
 
     const rawText = await res.text();
     if (!rawText || !rawText.trim()){
-      throw new Error('El webhook respondió con el body vacío. Revisá en n8n que el nodo "Respond to Webhook" esté conectado después del AI Agent y que la ejecución haya terminado sin error.');
+      throw new Error('El webhook respondió con el body vacío.');
     }
 
     let data;
     try {
       data = JSON.parse(rawText);
     } catch (e){
-      data = rawText; // not JSON, treat as plain text
+      data = rawText;
     }
-    return extractResponseText(data, fieldResponse.value.trim());
+    return extractResponseText(data, FIELD_RESPONSE);
   }
-
-  testBtn.addEventListener('click', async () => {
-    const url = webhookInput.value.trim();
-    if (!url){
-      setStatus('error', 'Falta la URL del webhook');
-      return;
-    }
-    setStatus('busy', 'Probando conexión…');
-    testBtn.disabled = true;
-    try {
-      const reply = await callWebhook('ping de prueba desde la consola web');
-      setStatus('online', 'Conectado');
-      enableChat(true);
-      settingsPanel.classList.remove('open');
-      addBubble('bot', reply, false);
-    } catch (err){
-      setStatus('error', 'No se pudo conectar');
-      addBubble('bot', 'No se pudo conectar con el webhook: ' + err.message, true);
-    } finally {
-      testBtn.disabled = false;
-    }
-  });
 
   async function sendMessage(){
     const text = msgInput.value.trim();
-    if (!text || !configured) return;
+    if (!text) return;
     addBubble('user', text, false);
     msgInput.value = '';
     autoresize();
-    sendBtn.disabled = true;
-    msgInput.disabled = true;
+    enableChat(false);
     setStatus('busy', 'Esperando respuesta…');
     addTyping();
     try {
@@ -450,8 +316,7 @@
       addBubble('bot', 'Error al contactar al agente: ' + err.message, true);
       setStatus('error', 'Error de conexión');
     } finally {
-      sendBtn.disabled = false;
-      msgInput.disabled = false;
+      enableChat(true);
       msgInput.focus();
     }
   }
@@ -464,7 +329,21 @@
     }
   });
 
-  setStatus('', 'Sin configurar');
+  // Conectar automáticamente al cargar la página
+  (async function connect(){
+    setStatus('busy', 'Conectando…');
+    try {
+      const reply = await callWebhook('ping de prueba desde la consola web');
+      setStatus('online', 'Conectado');
+      enableChat(true);
+      addBubble('bot', reply, false);
+      msgInput.focus();
+    } catch (err){
+      setStatus('error', 'No se pudo conectar');
+      emptyState.querySelector('.big').textContent = 'No se pudo conectar con el agente';
+      emptyState.querySelector('.small').textContent = err.message;
+    }
+  })();
 })();
 </script>
 
