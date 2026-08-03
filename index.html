@@ -333,7 +333,7 @@
   (async function connect(){
     setStatus('busy', 'Conectando…');
     try {
-      const reply = await callWebhook('ping de prueba desde la consola web');
+      const reply = await callWebhook('Hola');
       setStatus('online', 'Conectado');
       enableChat(true);
       addBubble('bot', reply, false);
