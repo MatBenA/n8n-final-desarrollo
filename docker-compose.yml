@@ -1,4 +1,21 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_turnos
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=consultorio
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=turnos_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - n8n_network
+    # No necesita "ports" hacia afuera: n8n le habla por la red interna de docker.
+    # Si querés inspeccionarla desde tu PC con un cliente (DBeaver, Outerbase, etc.)
+    # descomentá esto:
+    # ports:
+    #   - "5432:5432"
   n8n:
     image: n8nio/n8n:latest
     container_name: n8n
@@ -6,13 +23,13 @@ services:
     ports:
       - "5678:5678"
     environment:
-      - N8N_HOST=swipe-violate-backroom.ngrok-free.dev
+      - N8N_HOST=${NGROK_DOMAIN} #Reemplazar por la URL de ngrok
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - NODE_ENV=production
-      - WEBHOOK_URL=https://swipe-violate-backroom.ngrok-free.dev/
+      - WEBHOOK_URL=https://${NGROK_DOMAIN}/ #Reemplazar por la URL de ngrok
       - GENERIC_TIMEZONE=America/Argentina/Buenos_Aires
-      - N8N_ENCRYPTION_KEY= #Busca la clave en el archivo .env
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY} #Busca la clave en el archivo .env
       - N8N_SECURE_COOKIE=false
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -23,6 +40,8 @@ services:
 
 volumes:
   n8n_data:
+    driver: local
+  postgres_data:
     driver: local
 
 networks:
