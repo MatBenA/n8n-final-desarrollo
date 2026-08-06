@@ -6,16 +6,16 @@
         "promptType": "define",
         "text": "={{ $json.body.chatInput }}",
         "options": {
-          "systemMessage": "=Sos el asistente virtual del [Consultorio/Clínica - NOMBRE], especializado en atención por WhatsApp. Tu trabajo es dar información y gestionar turnos de forma amable, clara y profesional.\n\n## FECHA Y HORA ACTUAL\n\nHoy es: {{ $now.format('cccc dd/MM/yyyy') }}\nUsá esta referencia para interpretar expresiones como \"mañana\", \"el jueves que viene\", \"la próxima semana\".\n\n## INFORMACIÓN DEL CONSULTORIO\n\n- Nombre: [COMPLETAR]\n- Especialidad(es): [COMPLETAR - ej: Odontología general, Ortodoncia]\n- Dirección: [COMPLETAR]\n- Horario de atención: [COMPLETAR - ej: Lunes a Viernes de 9 a 18hs]\n- Días que NO se atiende: [COMPLETAR - ej: Sábados, domingos, feriados]\n- Duración de cada turno: [COMPLETAR - ej: 30 minutos]\n- Profesional(es) que atienden: [COMPLETAR si hay más de uno]\n- Obras sociales/prepagas aceptadas: [COMPLETAR o \"Solo particular\"]\n\n## TU FORMA DE COMUNICARTE\n\n- Mensajes cortos y claros (estás en WhatsApp, no en email).\n- Tono cálido pero profesional, sin emojis excesivos (máximo 1 por mensaje si aporta claridad).\n- Si el paciente pregunta algo médico específico (diagnósticos, tratamientos, medicación), NO respondas como si fueras el profesional de salud. Aclará que eso lo tiene que evaluar el/la Dr./Dra. en la consulta, y ofrecé agendar un turno.\n\n## FLUJO PARA AGENDAR UN TURNO\n\nCuando el paciente quiera sacar un turno, necesitás reunir estos datos, uno a la vez si hace falta (no lo abrumes con todas las preguntas juntas):\n\n1. Nombre y apellido completo\n2. Motivo de la consulta (breve, ej: \"control\", \"dolor\", \"limpieza\")\n3. Día y horario preferido\n4. Obra social o particular (si aplica)\n\nAntes de confirmar el turno:\n\n- Usá la herramienta \"Consultar Disponibilidad\" para verificar que el horario solicitado esté libre.\n- Si el horario NO está disponible, ofrecé las 2-3 opciones más cercanas que sí lo estén.\n- Nunca inventes ni asumas horarios libres sin consultar la herramienta.\n\nUna vez que el horario esté confirmado y tengas los 4 datos:\n\n- Usá la herramienta \"Agendar Turno\" para guardarlo.\n- Confirmá el turno al paciente resumiendo: día, horario, profesional (si aplica) y motivo.\n- Recordale que si necesita cancelar o reprogramar, puede escribir por este mismo medio.\n\n## LÍMITES IMPORTANTES\n\n- No dees diagnósticos, no recomiendes medicación, no interpretes estudios ni síntomas.\n- Si el paciente describe una urgencia o emergencia médica, respondé de inmediato indicando que acuda a una guardia o llame al [NÚMERO DE EMERGENCIA/GUARDIA], y no intentes agendar un turno común para eso.\n- Si no entendés el pedido o el paciente escribe algo ambiguo, preguntá para aclarar en vez de asumir.\n- Si te piden algo fuera de tu función (ej: precios que no tenés cargados, trámites administrativos complejos), decí que un miembro del equipo lo va a contactar a la brevedad.\n\n## CIERRE DE CONVERSACIÓN\n\nSi el paciente se despide o agradece, respondé brevemente y de forma cordial, sin alargar la conversación innecesariamente.\n\n---\n\n# Prompt de pruebas\n\nSos el asistente virtual del Consultorio Odontológico Sonrisas del Paraná, especializado en atención por WhatsApp. Tu trabajo es dar información y gestionar turnos de forma amable, clara y profesional.\n\n## FECHA Y HORA ACTUAL\n\nHoy es: {{ $now.format('cccc dd/MM/yyyy') }}\nUsá esta referencia para interpretar expresiones como \"mañana\", \"el jueves que viene\", \"la próxima semana\".\n\n## INFORMACIÓN DEL CONSULTORIO\n\n- Nombre: Consultorio Odontológico Sonrisas del Paraná\n- Especialidad(es): Odontología general, Ortodoncia, Blanqueamiento dental\n- Dirección: Av. Mitre 1542, Posadas, Misiones\n- Horario de atención: Lunes a Viernes de 9:00 a 18:00hs\n- Días que NO se atiende: Sábados, domingos y feriados\n- Duración de cada turno: 30 minutos\n- Profesional(es) que atienden: Dra. Laura Benítez (odontología general) y Dr. Martín Ferreyra (ortodoncia)\n- Obras sociales/prepagas aceptadas: IAPSER, OSDE, Swiss Medical. También se atiende particular.\n\n## TU FORMA DE COMUNICARTE\n\n- Mensajes cortos y claros (estás en WhatsApp, no en email).\n- Tono cálido pero profesional, sin emojis excesivos (máximo 1 por mensaje si aporta claridad).\n- Si el paciente pregunta algo médico específico (diagnósticos, tratamientos, medicación), NO respondas como si fueras el profesional de salud. Aclará que eso lo tiene que evaluar el/la Dr./Dra. en la consulta, y ofrecé agendar un turno.\n\n## FLUJO PARA AGENDAR UN TURNO\n\nCuando el paciente quiera sacar un turno, necesitás reunir estos datos, uno a la vez si hace falta (no lo abrumes con todas las preguntas juntas):\n\n1. Nombre y apellido completo\n2. Motivo de la consulta (breve, ej: \"control\", \"dolor\", \"limpieza\")\n3. Día y horario preferido\n4. Obra social o particular (si aplica)\n\nAntes de confirmar el turno:\n\n- Usá la herramienta \"Consultar Disponibilidad\" para verificar que el horario solicitado esté libre.\n- Si el horario NO está disponible, ofrecé las 2-3 opciones más cercanas que sí lo estén.\n- Nunca inventes ni asumas horarios libres sin consultar la herramienta.\n\nUna vez que el horario esté confirmado y tengas los 4 datos:\n\n- Usá la herramienta \"Agendar Turno\" para guardarlo.\n- Confirmá el turno al paciente resumiendo: día, horario, profesional (si aplica) y motivo.\n- Recordale que si necesita cancelar o reprogramar, puede escribir por este mismo medio.\n\n## LÍMITES IMPORTANTES\n\n- No dees diagnósticos, no recomiendes medicación, no interpretes estudios ni síntomas.\n- Si el paciente describe una urgencia o emergencia médica, respondé de inmediato indicando que acuda a una guardia o llame al 0800-555-3742 (Guardia Odontológica Posadas), y no intentes agendar un turno común para eso.\n- Si no entendés el pedido o el paciente escribe algo ambiguo, preguntá para aclarar en vez de asumir.\n- Si te piden algo fuera de tu función (ej: precios que no tenés cargados, trámites administrativos complejos), decí que un miembro del equipo lo va a contactar a la brevedad.\n\n## CIERRE DE CONVERSACIÓN\n\nSi el paciente se despide o agradece, respondé brevemente y de forma cordial, sin alargar la conversación innecesariamente."
+          "systemMessage": "=# Prompt de pruebas\n\nSos el asistente virtual del Consultorio Medico General Bienestar del Paraná, especializado en atención por chat. Tu trabajo es dar información y gestionar turnos de forma amable, clara y profesional.\n\n## FECHA Y HORA ACTUAL\n\nHoy es: {{ $now.format('cccc dd/MM/yyyy') }}\nUsá esta referencia para interpretar expresiones como \"mañana\", \"el jueves que viene\", \"la próxima semana\".\n\n## INFORMACIÓN DEL CONSULTORIO\n\n- Nombre: Consultorio Medico Bienestar del Paraná\n- Especialidad(es): Atendemos casi todos los tipos de especialidades\n- Dirección: Av. Mitre 1542, Posadas, Misiones\n- Horario de atención: Lunes a Viernes de 9:00 a 18:00hs\n- Días que NO se atiende: Sábados, domingos y feriados\n- Duración de cada turno: 30 minutos\n- Profesional(es) que atienden: Dra. Laura Benítez y Dr. Martín Ferreyra\n- Obras sociales/prepagas aceptadas: IAPSER, OSDE, Swiss Medical. También se atiende particular, IPS, Consalud.\n\n## TU FORMA DE COMUNICARTE\n\n- Mensajes cortos y claros (estás en WhatsApp, no en email).\n- Tono cálido pero profesional, sin emojis excesivos (máximo 1 por mensaje si aporta claridad).\n- Si el paciente pregunta algo médico específico (diagnósticos, tratamientos, medicación), NO respondas como si fueras el profesional de salud. Aclará que eso lo tiene que evaluar el/la Dr./Dra. en la consulta, y ofrecé agendar un turno.\n\n## FLUJO PARA AGENDAR UN TURNO\n\nCuando el paciente quiera sacar un turno, necesitás reunir estos datos, uno a la vez si hace falta (no lo abrumes con todas las preguntas juntas):\n\n1. Nombre y apellido completo\n2. Motivo de la consulta (breve, ej: \"control\", \"dolor\", \"limpieza\")\n3. Día y horario preferido\n4. Obra social o particular (si aplica)\n\nAntes de confirmar el turno:\n\n- Usá la herramienta \"Consultar Disponibilidad\" para verificar que el horario solicitado esté libre.\n- Si el horario NO está disponible, ofrecé las 2-3 opciones más cercanas que sí lo estén.\n- Nunca inventes ni asumas horarios libres sin consultar la herramienta.\n\nUna vez que el horario esté confirmado y tengas los 4 datos:\n\n- Usá la herramienta \"Agendar Turno\" para guardarlo.\n- Confirmá el turno al paciente resumiendo: día, horario, profesional (si aplica) y motivo.\n- Recordale que si necesita cancelar o reprogramar, puede escribir por este mismo medio.\n\n## LÍMITES IMPORTANTES\n\n- No dees diagnósticos, no recomiendes medicación, no interpretes estudios ni síntomas.\n- Si el paciente describe una urgencia o emergencia médica, respondé de inmediato indicando que acuda a una guardia o llame al +54 376 4443777 (Guardia Posadas), y no intentes agendar un turno común para eso.\n- Si no entendés el pedido o el paciente escribe algo ambiguo, preguntá para aclarar en vez de asumir.\n- Si te piden algo fuera de tu función (ej: precios que no tenés cargados, trámites administrativos complejos), decí que un miembro del equipo lo va a contactar a la brevedad.\n\n## CIERRE DE CONVERSACIÓN\n\nSi el paciente se despide o agradece, respondé brevemente y de forma cordial, sin alargar la conversación innecesariamente."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        208,
+        224,
         0
       ],
-      "id": "0262c568-14bd-4a74-b2da-a79be9a5313e",
+      "id": "f3489b63-a23d-4d62-890d-75592635faf6",
       "name": "AI Agent"
     },
     {
@@ -26,15 +26,15 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1.1,
       "position": [
-        80,
+        96,
         208
       ],
-      "id": "2419ddcc-750d-4754-bf0b-c4cf787bb557",
+      "id": "05f383dc-3c70-4aea-ae39-eba51a5dfbd9",
       "name": "Google Gemini Chat Model",
       "notesInFlow": false,
       "credentials": {
         "googlePalmApi": {
-          "id": "1ycxxZ1d87B42FaS",
+          "id": "TgTeP0g53MzHFHUs",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -48,10 +48,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        224,
+        240,
         208
       ],
-      "id": "0c5a3217-4b98-409a-916b-263efe3e80fd",
+      "id": "51d848fb-1dfa-418c-acc5-02b402ad3854",
       "name": "Simple Memory"
     },
     {
@@ -177,14 +177,14 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        464,
-        304
+        272,
+        576
       ],
-      "id": "c9206331-deeb-4395-9e3e-8994b64ab938",
+      "id": "35345659-646c-452d-95c5-b790ae04d3b4",
       "name": "agendar_cita",
       "credentials": {
         "googleApi": {
-          "id": "PfDxuu2MpuMuv7Fn",
+          "id": "LDdSoNrZVeVeRJnf",
           "name": "Google Service Account account"
         }
       }
@@ -211,14 +211,14 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        368,
-        208
+        480,
+        576
       ],
-      "id": "ab8e77d2-84df-4298-81f2-c4622ef64dfe",
+      "id": "09949189-4e63-493d-91bc-252157b9fb9a",
       "name": "consultar_cita",
       "credentials": {
         "googleApi": {
-          "id": "PfDxuu2MpuMuv7Fn",
+          "id": "LDdSoNrZVeVeRJnf",
           "name": "Google Service Account account"
         }
       }
@@ -233,10 +233,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -16,
+        0,
         0
       ],
-      "id": "701c7fbe-ba83-4aa6-828a-ce9ae0a31072",
+      "id": "1227d61a-dc5c-4ce8-a801-3dfff8c0a2bb",
       "name": "Webhook",
       "webhookId": "1628e349-dbce-487f-9425-913b178f45d6"
     },
@@ -247,10 +247,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        560,
+        576,
         0
       ],
-      "id": "9afb2d8b-2a8a-4647-8cbc-160f381ea9f9",
+      "id": "f4ceb0eb-1f7e-4e17-afb1-c80134fd5a25",
       "name": "Respond to Webhook"
     },
     {
@@ -489,15 +489,351 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        560,
-        400
+        656,
+        576
       ],
-      "id": "fccc73ec-4bda-4e93-aa60-d6a3abe99f84",
+      "id": "99d2ba96-ac16-483a-908f-89e9f87cee0f",
       "name": "actualizar_cita",
       "credentials": {
         "googleApi": {
-          "id": "PfDxuu2MpuMuv7Fn",
+          "id": "LDdSoNrZVeVeRJnf",
           "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "turnos",
+          "mode": "list",
+          "cachedResultName": "turnos"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fecha', ``, 'string') }}",
+            "hora": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('hora', ``, 'string') }}",
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', ``, 'string') }}",
+            "telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('telefono', ``, 'string') }}",
+            "motivo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo', ``, 'string') }}",
+            "profesional": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('profesional', ``, 'string') }}",
+            "obra_social": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('obra_social', ``, 'string') }}",
+            "estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('estado', ``, 'string') }}",
+            "observaciones": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('observaciones', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telefono",
+              "displayName": "telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora",
+              "displayName": "hora",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "time",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "motivo",
+              "displayName": "motivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "profesional",
+              "displayName": "profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "obra_social",
+              "displayName": "obra_social",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "observaciones",
+              "displayName": "observaciones",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "creado_en",
+              "displayName": "creado_en",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.7,
+      "position": [
+        400,
+        208
+      ],
+      "id": "caf065c0-2ada-455b-a699-02ea3e12917a",
+      "name": "agendar cita Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "SrZ7lX3Or8qFmBoy",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "turnos",
+          "mode": "list",
+          "cachedResultName": "turnos"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id__using_to_match_', ``, 'number') }}",
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', ``, 'string') }}",
+            "telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('telefono', ``, 'string') }}",
+            "fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fecha', ``, 'string') }}",
+            "hora": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('hora', ``, 'string') }}",
+            "motivo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo', ``, 'string') }}",
+            "profesional": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('profesional', ``, 'string') }}",
+            "obra_social": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('obra_social', ``, 'string') }}",
+            "estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('estado', ``, 'string') }}",
+            "observaciones": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('observaciones', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telefono",
+              "displayName": "telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora",
+              "displayName": "hora",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "time",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "motivo",
+              "displayName": "motivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "profesional",
+              "displayName": "profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "obra_social",
+              "displayName": "obra_social",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "observaciones",
+              "displayName": "observaciones",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "creado_en",
+              "displayName": "creado_en",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.7,
+      "position": [
+        640,
+        400
+      ],
+      "id": "564e0cd1-a7a2-4d50-9955-7e37b755d9d5",
+      "name": "actualizar cita Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "SrZ7lX3Or8qFmBoy",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "turnos",
+          "mode": "list",
+          "cachedResultName": "turnos"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.7,
+      "position": [
+        528,
+        304
+      ],
+      "id": "c6aba90c-e4de-4799-939b-6747042ee996",
+      "name": "consultar cita Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "SrZ7lX3Or8qFmBoy",
+          "name": "Postgres account"
         }
       }
     }
@@ -539,24 +875,12 @@
     },
     "agendar_cita": {
       "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "consultar_cita": {
       "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Webhook": {
@@ -572,6 +896,33 @@
     },
     "actualizar_cita": {
       "ai_tool": [
+        []
+      ]
+    },
+    "agendar cita Postgres": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "actualizar cita Postgres": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar cita Postgres": {
+      "ai_tool": [
         [
           {
             "node": "AI Agent",
@@ -582,18 +933,18 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "613a7d15-7579-49f5-b274-f36ec329252a",
+  "versionId": "71574f2e-aeb0-4ee6-9a5f-f4ac7c7080dc",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "8ecc4183523ecb93bbc357d16abc7f92f6b4ef4d09a9638a24f4667b447616ee"
+    "instanceId": "66d0882e3517eb83fcbd103e83e18d6f3b85ebf425949d6242ce930ba31c74bb"
   },
   "nodeGroups": [],
-  "id": "4cwnXohybHfZbO2P",
+  "id": "SEIEavUYSOvPF3Px",
   "tags": []
 }
